@@ -231,7 +231,9 @@ The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It ex
 * `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
 
 These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+The class diagram below illustrates the structure of the undo/redo mechanism:
 
+<puml src="diagrams/UndoRedoClassDiagram.puml" alt="Class Diagram for Undo/Redo Feature" />
 Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
 
 Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.

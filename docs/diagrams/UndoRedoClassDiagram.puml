@@ -1,0 +1,57 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+
+package Logic <<Rectangle>> {
+Class "{abstract}\nCommand" as Command
+Class UndoCommand
+Class RedoCommand
+Class CommandResult
+}
+
+package Model <<Rectangle>> {
+Class "<<interface>>\nModel" as Model
+Class ModelManager
+Class "{abstract}\nAddressBook" as AddressBook
+Class VersionedAddressBook
+}
+
+UndoCommand -up-|> Command
+RedoCommand -up-|> Command
+
+UndoCommand .down.> Model
+RedoCommand .down.> Model
+
+UndoCommand .up.> CommandResult : <<create>>
+RedoCommand .up.> CommandResult : <<create>>
+
+ModelManager .up.|> Model
+ModelManager -right-> "1" VersionedAddressBook
+VersionedAddressBook -up-|> AddressBook
+
+note right of VersionedAddressBook
+    VersionedAddressBook manages:
+    - addressBookStateList: History of states
+    - currentStatePointer: Current position
+    
+    Operations:
+    - commit(): Save current state
+    - undo(): Move pointer left
+    - redo(): Move pointer right
+    - canUndo(): Check if undo possible
+    - canRedo(): Check if redo possible
+end note
+
+note right of UndoCommand
+    Calls Model#undoAddressBook()
+    Checks Model#canUndoAddressBook()
+end note
+
+note right of RedoCommand
+    Calls Model#redoAddressBook()
+    Checks Model#canRedoAddressBook()
+end note
+
+@enduml
